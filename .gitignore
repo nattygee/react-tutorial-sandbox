@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+
+# Compiled CSS
+*.css
+!styles.css
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace 
