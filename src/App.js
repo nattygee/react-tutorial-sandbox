@@ -6,6 +6,7 @@ function Square() {
 
   function handleClick() {
     setValue('x')
+    console.log("yay testing remote push")
   }
 
   return <button className="square" onClick={handleClick}>
