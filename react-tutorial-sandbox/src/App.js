@@ -19,8 +19,10 @@ export default function Board() {
     
     if(xIsNext) {
       nextSquares[i] = 'X';
+      console.log("it's an X")
     } else {
       nextSquares[i] = 'O';
+      console.log("it's an O")
     }
     
     setSquares(nextSquares);
