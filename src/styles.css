@@ -88,3 +88,10 @@ body {
 .game-info {
   margin-left: 20px;
 }
+
+.description {
+  margin: 1rem;
+  border: 1px solid #CBCBCB;
+  padding: 1rem;
+  border-radius: 1rem;
+}

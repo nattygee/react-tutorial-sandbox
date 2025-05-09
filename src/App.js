@@ -4,6 +4,15 @@ function Square({ value, onSquareClick }) {
   return <button className="square" onClick={onSquareClick}>{value}</button>;
 }
 
+function GameDescription() {
+  return (
+    <div className="description">
+      <h1>What is this?</h1>
+      <p>This is the game of x's and o's</p>
+    </div>
+  );
+}
+
 function Board({ xIsNext, squares, onPlay }) {
 
   function handleClick(i) {
@@ -31,6 +40,7 @@ function Board({ xIsNext, squares, onPlay }) {
   let status;
   if (winner) {
     status = "Winner: " + winner;
+    // should also add a counter for "x wins" and "y wins"
   } else {
     status = "Next player: " + (xIsNext ? "X" : "O")
   }
@@ -68,10 +78,23 @@ export default function Game() {
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
+    console.log(currentMove);
+  }
+
+  function resetGame() {
+    // if the reset button is clicked, remove all of the history list items
+    setHistory([Array(9).fill(null)]);
+    setCurrentMove(0);
   }
 
   function jumpTo(nextMove) {
-    setCurrentMove(nextMove);
+    // ME: if description == 'Reset game' set current move to nextMove, but also clear the move history buttons
+    // CHAT: if the history button you clicked on has the key of 0 then reset the game (see function above) -> that means clear board(setCurrentMove) and turn history array to all null(setHistory)
+    if(nextMove === 0) {
+      resetGame();
+    } else {
+      setCurrentMove(nextMove);
+    }
   }
 
   const moves = history.map((squares, move) => {
@@ -79,13 +102,15 @@ export default function Game() {
     if (move > 0) {
       description = 'Go to move #' + move;
     } else {
-      description = 'Go to game start';
+      description = 'Reset game';
     }
 
     return (
-      <li key={move}>
-        <button onClick={() => jumpTo(move)}>{description}</button>
-      </li>
+      <>
+        <li key={move}>
+          <button onClick={() => jumpTo(move)}>{description}</button>
+        </li>
+      </>
     );
   });
 
@@ -97,8 +122,11 @@ export default function Game() {
       <div className="game-info">
         <ol>{moves}</ol>
       </div>
+      <GameDescription />
     </div>
   );
+
+  
 }
 
 function calculateWinner(squares) {
