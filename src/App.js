@@ -13,10 +13,8 @@ function GameDescription() {
   );
 }
 
-function Board({ xIsNext, squares, onPlay }) {
-
+function Board({ xIsNext, squares, onPlay, xScore, yScore, incrementScore }) {
   function handleClick(i) {
-
     if(squares[i] || calculateWinner(squares)) {
       return;
     }
@@ -32,6 +30,12 @@ function Board({ xIsNext, squares, onPlay }) {
     }
     
     onPlay(nextSquares);
+    
+    // Check for winner after the move
+    const winner = calculateWinner(nextSquares);
+    if (winner) {
+      incrementScore(winner);
+    }
 
     console.log(nextSquares);
   }
@@ -40,11 +44,10 @@ function Board({ xIsNext, squares, onPlay }) {
   let status;
   if (winner) {
     status = "Winner: " + winner;
-    // should also add a counter for "x wins" and "y wins"
   } else {
     status = "Next player: " + (xIsNext ? "X" : "O")
   }
-
+  
   return (
     <>
     <div className="status">{status}</div>
@@ -63,6 +66,10 @@ function Board({ xIsNext, squares, onPlay }) {
         <Square value={squares[7]} onSquareClick={() => handleClick(7)}/>
         <Square value={squares[8]} onSquareClick={() => handleClick(8)}/>
       </div>
+      <br />
+      <h4>Scores</h4>
+      <div className="status">X: {xScore}</div>
+      <div className="status">O: {yScore}</div>
     </>
   );
 }
@@ -71,8 +78,21 @@ export default function Game() {
     
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
+  const [xScore, setXScore] = useState(0);
+  const [yScore, setYScore] = useState(0);
   const xIsNext = currentMove % 2 === 0; /* <——— STATE VARIABLE */ 
   const currentSquares = history[currentMove];
+
+  function incrementScore(winner) {
+    if (winner === "X") {
+      setXScore(prevScore => prevScore + 1);
+      console.log("X won");
+    } else if (winner === "O") {
+      setYScore(prevScore => prevScore + 1);
+      console.log("O won");
+    }
+  }
+  
 
   function handlePlay(nextSquares) {
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
@@ -117,7 +137,14 @@ export default function Game() {
   return (
     <div className="game">
       <div className="game-board">
-        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+        <Board 
+          xIsNext={xIsNext} 
+          squares={currentSquares} 
+          onPlay={handlePlay} 
+          xScore={xScore}
+          yScore={yScore}
+          incrementScore={incrementScore}
+        />
       </div>
       <div className="game-info">
         <ol>{moves}</ol>
